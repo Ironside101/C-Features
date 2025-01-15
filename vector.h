@@ -76,14 +76,16 @@ public:
     // make sure vector can store at least n elements
     void reserve(size_t size);
 
+    // changes the size of vector
+    void resize(size_t size);
+    // fills any extra space with place_holder
+    void resize(size_t size, T place_holder);
+
     // add data to end of array
     void push_back(const T& val);
 
     // reduce capacity to be equal to size
     void shrink_to_fit(); // NOT DONE
-
-    // template <class... args>
-    // void push_back(args&&... vals); // NOT DONE
     
     // removes last element of vector
     void pop_back();
@@ -104,7 +106,10 @@ public:
     void print(size_t lower_bound, size_t upper_bound);
 
     // uses quicksort to find element
-    int find(T val); // NOTE DONE
+    int find(T val);
+
+    // swap this vector with v
+    void swap(Vector<T>& v);
 
 
 
@@ -153,7 +158,7 @@ T* Vector<T>::last() {
     // get the underlying pointer
     T* data_ptr = this->data();
     // add the amonut of elements onto that address then return
-    return data_ptr + this->capacity();
+    return data_ptr + this->size();
 }
 
 template <class T>
@@ -269,7 +274,7 @@ template <class T>
 T Vector<T>::return_zero() {
     if (std::is_same<T, int>()) return 0;
     else if (std::is_same<T, float>()) return 0.0f;
-    else if (std::is_same<T, const char*>() || std::is_same<T, const char[]>()) return '0';
+    else if (std::is_same<T, char>()) return '0';
     else if (std::is_same<T, bool>()) return false;
 
     // if the user is using a custom type return custom_type_zero
@@ -305,5 +310,79 @@ void Vector<T>::erase(size_t i) {
 
     v_size--;
 
+    return;
+}
+
+template <class T>
+int Vector<T>::find(T val) {
+    for (int i = 0; i < v_size; i++) {
+        auto it = ptr[i];
+
+        if (it == val) return i;
+    }
+
+    // failed the search
+    return -1;
+}
+
+template <class T>
+void Vector<T>::resize(size_t size) {
+    // if the vector should be increased in size
+    if (size > v_size) {
+        // may need to incease the capacity of vector
+        if (size > v_capacity) reserve(size);
+
+
+        // assign the new spaces to zero's
+        for (int i = v_size; i <= size; i++) (*this)[i] = return_zero();
+
+        (*this).print();
+        // update the size of vector
+        v_size = size;
+
+        return;
+    }
+
+    // if vector must be shrunk down
+    else {
+        for (int i = size; i < v_size; i++) (*this)[i] = return_zero();
+
+        v_size = size;
+
+        return;
+    }   
+}
+
+template <class T>
+void Vector<T>::resize(size_t size, T place_holder) {
+    // if the vector should be increased in size
+    if (size > v_size) {
+        // may need to incease the capacity of vector
+        if (size > v_capacity) reserve(size);
+
+
+        // assign the new spaces to zero's
+        for (int i = v_size; i <= size; i++) (*this)[i] = place_holder;
+
+        (*this).print();
+        // update the size of vector
+        v_size = size;
+
+        return;
+    }
+
+    // if vector must be shrunk down
+    else {
+        for (int i = size; i < v_size; i++) (*this)[i] = place_holder;
+
+        v_size = size;
+
+        return;
+    }   
+}
+
+template <class T>
+void Vector<T>::swap(Vector<T>& v) {
+    std::swap(v.ptr, this->ptr);
     return;
 }
