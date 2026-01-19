@@ -353,19 +353,6 @@ public:
 
                 // merge the two subtrees of the new root node and the right subtree of the old root node 
                 else {
-                    // first merge the two left subtrees
-                    /*Node* left_sub_tree = merge(root->left, root->right);
-                    
-                    // make the merged subtree the left subtree of the root node
-                    root->left = left_sub_tree;
-                    left_sub_tree = nullptr;
-                    
-                    // link right subtree
-                    root->right = old_root->right;
-                    
-                    delete old_root;
-                    return;*/
-
                     Node* right_sub_tree = merge(root->right, old_root->right);
 
                     root->right = right_sub_tree;
